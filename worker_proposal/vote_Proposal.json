@@ -1,0 +1,16 @@
+{
+    "jsonrpc": "2.0",
+    "method": "icx_call",
+    "params": {
+        "nid": "0x3",
+        "to": "cx525a1cd872f7478a8be38e5adbfe9a709437201f",
+        "dataType": "call",
+        "data": {
+            "method": "vote_Proposal",
+            "params": {
+                "project_name": "0x7D0",
+                "vote_status": "0x46"            
+            }
+        }
+    }
+}
