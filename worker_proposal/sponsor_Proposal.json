@@ -3,16 +3,12 @@
     "method": "icx_call",
     "params": {
         "nid": "0x3",
-        "to": "cx525a1cd872f7478a8be38e5adbfe9a709437201f",
+        "to": "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
         "dataType": "call",
         "data": {
             "method": "sponsor_Proposal",
             "params": {
-                "project_name": "0x7D0",
-                "amount": "0xA",
-                "cycle_num": "0x5",
-                "cycle_duration_by_block": "0xD0",
-                "description": "project decription"
+                "project_name": "Propose3"
             }
         }
     }

@@ -38,9 +38,13 @@ class WorkerProposal(IconScoreBase):
         return False
 
     @eventlog(indexed=1)
-    def FundTransfer(self, _by: Address, amount: int):
+    def FundTransfer(self, _by: Address, amount: int, cycles: int):
         pass
 
+    @payable
+    def fallback(self):
+        Logger.debug(f'Hello, world!', TAG)
+        
     @external(readonly=True)
     def hello(self) -> str:
         Logger.debug(f'Hello, world!', TAG)
@@ -117,11 +121,14 @@ class WorkerProposal(IconScoreBase):
         if self.search(proposal_list, project_name):
             revert("The proposal already created")
 
-        if amount < 0:
+        proposal_list.append(project_name)
+        json_proposal_list["proposals"] = proposal_list
+
+        if amount <= 0:
             revert("amount must be possitive value")
-        if cycle_num < 0:
+        if cycle_num <= 0:
             revert("cycle number must be possitive value")
-        if cycle_duration_by_block < 0:
+        if cycle_duration_by_block <= 0:
             revert("cycle duration must be possitive value")
 
         json_proposal = {}
@@ -137,6 +144,7 @@ class WorkerProposal(IconScoreBase):
         json_proposal["voting_list"] = []
         json_proposal["voting_pct"] = 0
 
+        self._proposal_list.set(json_dumps(json_proposal_list))
         self._proposal[project_name] = json_dumps(json_proposal)
 
     @external
@@ -154,7 +162,7 @@ class WorkerProposal(IconScoreBase):
 
         _proposal_list_str = self._proposal_list.get()
         json_proposal_list = {}
-        json_proposal_list = []
+        proposal_list = []
         if _proposal_list_str != "":
             json_proposal_list = json_loads(_proposal_list_str)
             proposal_list = json_proposal_list["proposals"]
@@ -174,7 +182,6 @@ class WorkerProposal(IconScoreBase):
         json_proposal["sponsor"] = str(self.msg.sender)
 
         json_proposal["voting_start_at_block"] = self.block_height
-
         json_config = json_loads(self._configuration.get())
 
         json_proposal["voting_end_at_block"] = self.block_height + json_config["voting_period_by_block"]
@@ -195,7 +202,7 @@ class WorkerProposal(IconScoreBase):
         
         _proposal_list_str = self._proposal_list.get()
         json_proposal_list = {}
-        json_proposal_list = []
+        proposal_list = []
         if _proposal_list_str != "":
             json_proposal_list = json_loads(_proposal_list_str)
             proposal_list = json_proposal_list["proposals"]
@@ -215,8 +222,8 @@ class WorkerProposal(IconScoreBase):
             revert("The project need a PRep to sponsor the proposal")
 
         voting_list = []
-        if json_proposal["voting_list"] != ""
-        voting_list = json_proposal["voting_list"]
+        if json_proposal["voting_list"] != "":
+            voting_list = json_proposal["voting_list"]
 
         is_voted = False
         up_vote = 0
@@ -226,14 +233,14 @@ class WorkerProposal(IconScoreBase):
                 voting_list[i]["name"] = vote_status
                 is_voted = True
                 if vote_status == True:
-                    ++up_vote
+                    up_vote = up_vote + 1
             elif voting_list[i]["status"] == True:
-                ++up_vote
+                up_vote =  up_vote + 1
 
         if not is_voted:
             voting_list.append({"name": str(self.msg.sender), "status": vote_status})
             if vote_status:
-                ++up_vote
+                up_vote =  up_vote + 1
         
         json_proposal["voting_pct"] = up_vote/len(voting_list)*100
         self._proposal[project_name] = json_dumps(json_proposal)
@@ -256,17 +263,26 @@ class WorkerProposal(IconScoreBase):
         if json_proposal["voting_pct"] < json_config["approval_pct"]:
             revert("The project not enough the votes to receive payment")
 
-        if json_proposal["current_cycle"] >= json_proposal["cycle_num"]:
+        if json_proposal["cycle_num"] <= json_proposal["current_cycle"]:
             revert("You already receive all payment cycles")
-
         
-        payout = int(json_proposal["amount"] / json_proposal["cycle_num"])
+        cycle_at_claim = 0
+        for i in range(1, json_proposal["cycle_num"]+1):
+                if self.block_height >= json_proposal["voting_end_at_block"] + json_proposal["cycle_duration_by_block"]*i:
+                    cycle_at_claim = i
+
+        cycle_num = cycle_at_claim - json_proposal["current_cycle"]
+
+        if cycle_num < 1:
+            revert("Please wait for next cycle")
+
+        payout = int(json_proposal["amount"] * cycle_num/ json_proposal["cycle_num"])
 
         try:
             self.icx.transfer(self.msg.sender, payout)
-            self.FundTransfer(self.msg.sender, payout)
+            self.FundTransfer(self.msg.sender, payout, cycle_num)
         except:
-            revert("Network issue in sending the payment.")
+            revert("Has issue in sending the payment.")
 
-        json_proposal["current_cycle"] += 1
+        json_proposal["current_cycle"] += cycle_num
         self._proposal[project_name] = json_dumps(json_proposal)

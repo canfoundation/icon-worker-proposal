@@ -21,19 +21,19 @@ $ tbears keyinfo keystore_test1 -p test1_Account
 
 ```
 
-# tbears deploy  worker_proposal/ -k keystore_test1 -p test1_Account
-transaction hash: 0xcf2df776c49b265e0b25829671b6a77c770ec4241b5220c6976423d90e582395
+# tbears deploy  worker_proposal/ -c worker_proposal/deploy_contract.json -k keystore_test1 -p test1_Account
+transaction hash: 0xab5506d00eda472376a8a054ca3244bf15054eb46d567a466c205e45738c018a
 
-# tbears txresult 0xcf2df776c49b265e0b25829671b6a77c770ec4241b5220c6976423d90e582395
+# tbears txresult 0xab5506d00eda472376a8a054ca3244bf15054eb46d567a466c205e45738c018a
 Transaction : {
     "jsonrpc": "2.0",
     "result": {
-        "txHash": "0xcf2df776c49b265e0b25829671b6a77c770ec4241b5220c6976423d90e582395",
+        "txHash": "0xab5506d00eda472376a8a054ca3244bf15054eb46d567a466c205e45738c018a",
         "blockHeight": "0x7b",
         "blockHash": "0x4241cbf72b5847da1c945a615e40243ae99264828e1f3ce4071e13a157fe68d0",
         "txIndex": "0x0",
         "to": "cx0000000000000000000000000000000000000000",
-        "scoreAddress": "cx525a1cd872f7478a8be38e5adbfe9a709437201f",
+        "scoreAddress": "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
         "stepUsed": "0x45e6bf3c",
         "stepPrice": "0x2540be400",
         "cumulativeStepUsed": "0x45e6bf3c",
@@ -54,6 +54,10 @@ response : {
     },
     "id": 1234
 }
+
+# to update
+
+# tbears deploy  worker_proposal/ -c worker_proposal/update_contract.json -k keystore_test1 -p test1_Account
 ```
 
 #### Create list wallet for PRep and deposit some ICX to have a fee to send transaction.
@@ -62,44 +66,39 @@ response : {
 # create wallet
 
 # python3
-
 >>> from iconsdk.wallet.wallet import KeyWallet
 
->>> wallet = KeyWallet.create()
->>> wallet.get_address()
-'hxdfd0a643babbe0b8ba8136e8214b5c2762e3ee6b'
->>> wallet.get_private_key()
-'cb0ebd5139b98df1b905f1c55a36b744985dfd42b2844a5fdc5a5606a0741c20'
->>> wallet.store('./keystore_test2', 'test2_Account')
+>>> wallet = KeyWallet.create(); wallet.get_address(); wallet.get_private_key(); wallet.store('./keystore_test2', 'test2_Account')
+'hx2e2a15df1f2bd0beb7849d3ef501a5413260081a'
+'273527fd433b0d2a8d60119323e5bf38eb458edd8e506ccafccbf9be9b6b655b'
 
->>> wallet = KeyWallet.create()
->>> wallet.get_address()
-'hx22f2ce0b544d5b90db1d33542eaeb885994ced45'
->>> wallet.get_private_key()
-'a2ae41ee5309944344f73fcc3342c6a9ee65e493626d017258d1cb9770f1f4e3'
->>> wallet.store('./keystore_test3', 'test3_Account')
+>>> wallet = KeyWallet.create(); wallet.get_address(); wallet.get_private_key(); wallet.store('./keystore_test3', 'test3_Account')
+'hx97b16930acf3ff760b4816d2811fffffa72afd8c'
+'fb2157fafd7f6a53f2dd3b2027a4927870c14706ac704c22ba0b8bf5ef500a4b'
 
->>> wallet.get_address()
-'hxe3f8037725e52385de52eb235697a84a98b25254'
->>>  wallet.get_private_key()
->>> wallet.get_private_key()
-'02f2b5c6fa12c6c95c3d0da033b8c73620ed745c361969b9b1068653fa3ac7e5'
->>> wallet.store('./keystore_test4', 'test4_Account')
+>>> wallet = KeyWallet.create(); wallet.get_address(); wallet.get_private_key(); wallet.store('./keystore_test4', 'test4_Account')
+'hx095c941aef40bbe0e4812463237c610551819e84'
+'649a1882c5eca160de1d4ce86fcc6e24f233496b2471e77ee6e84a9f29a37610'
 
->>> wallet = KeyWallet.create()
->>> wallet.get_address()
-'hxb3bcc8945b4c77f3ebe8198fe3180f43b50c4767'
->>> wallet.get_private_key()
-'0677c6873759e17b4769a8af16391015ddd5579769b5c2a7973788120b9f235a'
->>> wallet.store('./keystore_test5', 'test5_Account')
+>>> wallet = KeyWallet.create(); wallet.get_address(); wallet.get_private_key(); wallet.store('./keystore_test5', 'test5_Account')
+'hx29af0b38aeede2781747fb9603a98cbe9de45828'
+'6deeac0b6512d988463194bf73c0ae27080c59bc4433973c675730d9a0f32e99'
+
+>>> wallet = KeyWallet.create(); wallet.get_address(); wallet.get_private_key(); wallet.store('./keystore_test6', 'test6_Account')
+'hxc46e0885fa21286e6a415469fc1c7225354c5096'
+'361579ace27357c5db9e441e6b9366669dc6fce481b4abcbaa7523fe60ad66fe'
 
 # transfer fund 
 
-# tbears transfer hxdfd0a643babbe0b8ba8136e8214b5c2762e3ee6b 159895481589799999996000 -k keystore_test1 -p test1_Account
-# tbears transfer hx22f2ce0b544d5b90db1d33542eaeb885994ced45 159895481589799999996000 -k keystore_test1 -p test1_Account
-# tbears transfer hxe3f8037725e52385de52eb235697a84a98b25254 159895481589799999996000 -k keystore_test1 -p test1_Account
-# tbears transfer hxb3bcc8945b4c77f3ebe8198fe3180f43b50c4767 159895481589799999996000 -k keystore_test1 -p test1_Account
+# tbears transfer hx2e2a15df1f2bd0beb7849d3ef501a5413260081a 159895481589799999996000 -k keystore_test1 -p test1_Account
+# tbears transfer hx97b16930acf3ff760b4816d2811fffffa72afd8c 159895481589799999996000 -k keystore_test1 -p test1_Account
+# tbears transfer hx095c941aef40bbe0e4812463237c610551819e84 159895481589799999996000 -k keystore_test1 -p test1_Account
+# tbears transfer hx29af0b38aeede2781747fb9603a98cbe9de45828 159895481589799999996000 -k keystore_test1 -p test1_Account
+# tbears transfer hxc46e0885fa21286e6a415469fc1c7225354c5096 159895481589799999996000 -k keystore_test1 -p test1_Account
 
+# trannfer fund to smart contract
+
+# tbears transfer cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307 159895481589799999996000 -k keystore_test1 -p test1_Account
 ```
 
 
@@ -108,25 +107,7 @@ response : {
 ```
 # tbears sendtx worker_proposal/config_System.json -k keystore_test1 -p test1_Account
 Send transaction request successfully.
-transaction hash: 0x2da4612dde3bd0573f7acbfd1732a4bed82fb902e8969db4590c82ad86605c50
-root@adf55b4838ac:/work# tbears txresult 0x2da4612dde3bd0573f7acbfd1732a4bed82fb902e8969db4590c82ad86605c50
-Transaction : {
-    "jsonrpc": "2.0",
-    "result": {
-        "txHash": "0x2da4612dde3bd0573f7acbfd1732a4bed82fb902e8969db4590c82ad86605c50",
-        "blockHeight": "0x16c",
-        "blockHash": "0x2cd975893999de50c03b4d3e26992a67af99a2827ba10c145430cfb4cfbea7cb",
-        "txIndex": "0x0",
-        "to": "cx525a1cd872f7478a8be38e5adbfe9a709437201f",
-        "stepUsed": "0x52954",
-        "stepPrice": "0x2540be400",
-        "cumulativeStepUsed": "0x52954",
-        "eventLogs": [],
-        "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-        "status": "0x1"
-    },
-    "id": 1234
-}
+transaction hash: 0xef39c629d23c9f5e9a1d9c16041e63ea0e67136e9dc1247e9e2dff077a7237af
 
 # tbears call worker_proposal/get_configuration.json
 response : {
@@ -144,7 +125,7 @@ response : {
 #### set PRep list
 
 ```
-# modify the param prep_address in set_PREP.json as follwoing: hxdfd0a643babbe0b8ba8136e8214b5c2762e3ee6b, hx22f2ce0b544d5b90db1d33542eaeb885994ced45, hxe3f8037725e52385de52eb235697a84a98b25254, hxb3bcc8945b4c77f3ebe8198fe3180f43b50c4767, then call 
+# modify the param prep_address in set_PREP.json as follwoing: hx2e2a15df1f2bd0beb7849d3ef501a5413260081a, hx97b16930acf3ff760b4816d2811fffffa72afd8c, hx095c941aef40bbe0e4812463237c610551819e84, hx29af0b38aeede2781747fb9603a98cbe9de45828, hxc46e0885fa21286e6a415469fc1c7225354c5096, then call 
 
 tbears sendtx worker_proposal/set_PRep.json -k keystore_test1 -p test1_Account
 tbears sendtx worker_proposal/set_PRep.json -k keystore_test1 -p test1_Account
@@ -156,10 +137,11 @@ response : {
     "jsonrpc": "2.0",
     "result": {
         "preps": [
-            "hxdfd0a643babbe0b8ba8136e8214b5c2762e3ee6b",
-            "hx22f2ce0b544d5b90db1d33542eaeb885994ced45",
-            "hxe3f8037725e52385de52eb235697a84a98b25254",
-            "hxb3bcc8945b4c77f3ebe8198fe3180f43b50c4767"
+            "hx2e2a15df1f2bd0beb7849d3ef501a5413260081a",
+            "hx97b16930acf3ff760b4816d2811fffffa72afd8c",
+            "hx095c941aef40bbe0e4812463237c610551819e84",
+            "hx29af0b38aeede2781747fb9603a98cbe9de45828",
+            "hxc46e0885fa21286e6a415469fc1c7225354c5096"
         ]
     },
     "id": 1234
@@ -169,17 +151,193 @@ response : {
 #### Create propose
 
 ```
+tbears sendtx worker_proposal/create_Proposal.json -k keystore_test1 -p test1_Account
 
-# tbears call worker_proposal/get_prep.json
+# tbears call worker_proposal/get_proposals.json
 response : {
     "jsonrpc": "2.0",
     "result": {
-        "preps": [
-            "hxdfd0a643babbe0b8ba8136e8214b5c2762e3ee6b",
-            "hx22f2ce0b544d5b90db1d33542eaeb885994ced45",
-            "hxe3f8037725e52385de52eb235697a84a98b25254",
-            "hxb3bcc8945b4c77f3ebe8198fe3180f43b50c4767"
+        "proposals": [
+            "Propose3"
         ]
+    },
+    "id": 1234
+}
+
+# tbears call worker_proposal/get_proposal.json
+response : {
+    "jsonrpc": "2.0",
+    "result": {
+        "owner_address": "hxe7af5fcfd8dfc67530a01a0e403882687528dfcb",
+        "amount": "0x45",
+        "cycle_num": "0x5",
+        "cycle_duration_by_block": "0x12",
+        "current_cycle": "0x0",
+        "description": "description",
+        "sponsor": "",
+        "voting_start_at_block": "0x0",
+        "voting_end_at_block": "0x0",
+        "voting_list": [],
+        "voting_pct": "0x0"
+    },
+    "id": 1234
+}
+```
+
+#### Need an PRep sponsor the project
+
+```
+tbears sendtx worker_proposal/sponsor_Proposal.json -k keystore_test2 -p test2_Account
+
+# tbears call worker_proposal/get_proposal.json
+response : {
+    "jsonrpc": "2.0",
+    "result": {
+        "owner_address": "hxe7af5fcfd8dfc67530a01a0e403882687528dfcb",
+        "amount": "0x45",
+        "cycle_num": "0x5",
+        "cycle_duration_by_block": "0x12",
+        "current_cycle": "0x0",
+        "description": "description",
+        "sponsor": "hx2e2a15df1f2bd0beb7849d3ef501a5413260081a",
+        "voting_start_at_block": "0x4f5",
+        "voting_end_at_block": "0xcc5",
+        "voting_list": [],
+        "voting_pct": "0x0"
+    },
+    "id": 1234
+}
+```
+
+#### Vote for sponsored project
+
+```
+tbears sendtx worker_proposal/vote_Proposal.json -k keystore_test2 -p test2_Account
+
+tbears sendtx worker_proposal/vote_Proposal.json -k keystore_test3 -p test3_Account
+
+tbears sendtx worker_proposal/vote_Proposal.json -k keystore_test4 -p test4_Account
+
+tbears sendtx worker_proposal/vote_Proposal.json -k keystore_test5 -p test5_Account
+
+# tbears call worker_proposal/get_proposal.json
+response : {
+    "jsonrpc": "2.0",
+    "result": {
+        "owner_address": "hxe7af5fcfd8dfc67530a01a0e403882687528dfcb",
+        "amount": "0x45",
+        "cycle_num": "0x5",
+        "cycle_duration_by_block": "0x12",
+        "current_cycle": "0x0",
+        "description": "description",
+        "sponsor": "hx2e2a15df1f2bd0beb7849d3ef501a5413260081a",
+        "voting_start_at_block": "0xb66",
+        "last_claim_at_block": "0xb66",
+        "voting_end_at_block": "0x1336",
+        "voting_list": [
+            {
+                "name": "hx2e2a15df1f2bd0beb7849d3ef501a5413260081a",
+                "status": "0x1"
+            },
+            {
+                "name": "hx97b16930acf3ff760b4816d2811fffffa72afd8c",
+                "status": "0x1"
+            },
+            {
+                "name": "hx095c941aef40bbe0e4812463237c610551819e84",
+                "status": "0x1"
+            },
+            {
+                "name": "hx29af0b38aeede2781747fb9603a98cbe9de45828",
+                "status": "0x0"
+            }
+        ],
+        "voting_pct": 75.0
+    },
+    "id": 1234
+}
+```
+
+#### Claim Payment
+
+```
+# tbears sendtx worker_proposal/claim_Payment.json -k keystore_test1 -p test1_Account
+Send transaction request successfully.
+transaction hash: 0xaacff0f8da486f9196cbaa9100456bf020c8df45973191d923ca6552784c0ec3
+# tbears txresult 0xaacff0f8da486f9196cbaa9100456bf020c8df45973191d923ca6552784c0ec3
+Transaction : {
+    "jsonrpc": "2.0",
+    "result": {
+        "txHash": "0xaacff0f8da486f9196cbaa9100456bf020c8df45973191d923ca6552784c0ec3",
+        "blockHeight": "0x14a3",
+        "blockHash": "0xd28054fede2aa416ee7d1c296be30e3d75fffc7ea474445a434b60394bb454f4",
+        "txIndex": "0x0",
+        "to": "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
+        "stepUsed": "0xe49f8",
+        "stepPrice": "0x2540be400",
+        "cumulativeStepUsed": "0xe49f8",
+        "eventLogs": [
+            {
+                "scoreAddress": "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
+                "indexed": [
+                    "ICXTransfer(Address,Address,int)",
+                    "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
+                    "hxe7af5fcfd8dfc67530a01a0e403882687528dfcb",
+                    "0x45"
+                ],
+                "data": []
+            },
+            {
+                "scoreAddress": "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
+                "indexed": [
+                    "FundTransfer(Address,int,int)",
+                    "hxe7af5fcfd8dfc67530a01a0e403882687528dfcb"
+                ],
+                "data": [
+                    "0x45",
+                    "0x5"
+                ]
+            }
+        ],
+        "logsBloom": "0x00000000000000000000000100000000840000000000000000000000000000000010000000000000000000000000000000400000000000000000080000000000000000000000000000000000000000000000000000000000000000200000000000000000000002000010000000400000000000000000000000000000000000004000000000000000000000000000000000000000000000000000002000000000001000000000000000000000000000002000000000000000000000010000000000000000000000000000000000000000000000000000000208000000000200800080000000000000000000000000800000000000000000000000000000000000",
+        "status": "0x1"
+    },
+    "id": 1234
+}
+
+# tbears call worker_proposal/get_proposal.json
+response : {
+    "jsonrpc": "2.0",
+    "result": {
+        "owner_address": "hxe7af5fcfd8dfc67530a01a0e403882687528dfcb",
+        "amount": "0x45",
+        "cycle_num": "0x5",
+        "cycle_duration_by_block": "0x12",
+        "current_cycle": "0x5",
+        "description": "description",
+        "sponsor": "hx2e2a15df1f2bd0beb7849d3ef501a5413260081a",
+        "voting_start_at_block": "0xb66",
+        "last_claim_at_block": "0xb66",
+        "voting_end_at_block": "0x1336",
+        "voting_list": [
+            {
+                "name": "hx2e2a15df1f2bd0beb7849d3ef501a5413260081a",
+                "status": "0x1"
+            },
+            {
+                "name": "hx97b16930acf3ff760b4816d2811fffffa72afd8c",
+                "status": "0x1"
+            },
+            {
+                "name": "hx095c941aef40bbe0e4812463237c610551819e84",
+                "status": "0x1"
+            },
+            {
+                "name": "hx29af0b38aeede2781747fb9603a98cbe9de45828",
+                "status": "0x0"
+            }
+        ],
+        "voting_pct": 75.0
     },
     "id": 1234
 }

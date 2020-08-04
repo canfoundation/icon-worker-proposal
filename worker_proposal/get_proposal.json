@@ -3,12 +3,12 @@
     "method": "icx_call",
     "params": {
         "nid": "0x3",
-        "to": "cx525a1cd872f7478a8be38e5adbfe9a709437201f",
+        "to": "cxa5d3d0a98ec377fdbcc8a75cad70f989d6cb9307",
         "dataType": "call",
         "data": {
             "method": "get_proposal",
             "params": {
-                "project_name": "ICON_Proposal1"
+                "project_name": "Propose3"
             }
         }
     }
